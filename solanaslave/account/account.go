@@ -3,16 +3,13 @@ package account
 import (
 	"context"
 	"fmt"
-	"github.com/davecgh/go-spew/spew"
 	"github.com/gagliardetto/solana-go"
 	"github.com/gagliardetto/solana-go/programs/system"
 	confirm "github.com/gagliardetto/solana-go/rpc/sendAndConfirmTransaction"
 	"github.com/gagliardetto/solana-go/rpc/ws"
 	"log"
 
-	//"github.com/Krustuniverse-Klaytn-Group/locust-load-tester/klayslave/"
 	"github.com/gagliardetto/solana-go/rpc"
-	//"github.com/klaytn/klaytn/common"
 	"math/big"
 	"sync"
 )
@@ -68,7 +65,7 @@ func (self *Account) TransferNewValueTransferTx(c *rpc.Client, wsClient *ws.Clie
 	if err != nil {
 		log.Fatalf("Failed to sign tx: %v", err)
 	}
-	spew.Dump(tx)
+	//spew.Dump(tx)
 	// Pretty print the transaction:
 	//tx.EncodeTree(text.NewTreeEncoder(os.Stdout, "Transfer SOL"))
 
@@ -85,39 +82,8 @@ func (self *Account) TransferNewValueTransferTx(c *rpc.Client, wsClient *ws.Clie
 		//if err.Error()
 		return err
 	}
-	spew.Dump(sig)
-	//
-	//signer := types.NewEIP155Signer(chainID)
-	//tx, err := types.NewTransactionWithMap(types.TxTypeValueTransfer, map[types.TxValueKeyType]interface{}{
-	//	types.TxValueKeyNonce:    nonce,
-	//	types.TxValueKeyTo:       to.GetAddress(),
-	//	types.TxValueKeyAmount:   value,
-	//	types.TxValueKeyGasLimit: uint64(100000),
-	//	types.TxValueKeyGasPrice: gasPrice,
-	//	types.TxValueKeyFrom:     self.address,
-	//})
-	//if err != nil {
-	//	log.Fatalf("Failed to encode tx: %v", err)
-	//}
-	//
-	//err = tx.SignWithKeys(signer, self.privateKey)
-	//if err != nil {
-	//	log.Fatalf("Failed to sign tx: %v", err)
-	//}
-	//
-	//hash, err := c.SendRawTransaction(ctx, tx)
-	//if err != nil {
-	//	if err.Error() == blockchain.ErrNonceTooLow.Error() || err.Error() == blockchain.ErrReplaceUnderpriced.Error() {
-	//		fmt.Printf("Account(%v) nonce(%v) : Failed to sendTransaction: %v\n", self.GetAddress().String(), nonce, err)
-	//		fmt.Printf("Account(%v) nonce is added to %v\n", self.GetAddress().String(), nonce+1)
-	//		self.nonce++
-	//	} else {
-	//		fmt.Printf("Account(%v) nonce(%v) : Failed to sendTransaction: %v\n", self.GetAddress().String(), nonce, err)
-	//	}
-	//	return hash, gasPrice, err
-	//}
-
-	//self.nonce++
+	log.Printf("signature: %v", sig)
+	//spew.Dump(sig)
 
 	return nil
 }
