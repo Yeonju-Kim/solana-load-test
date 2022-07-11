@@ -5,11 +5,9 @@ import (
 	"fmt"
 	"github.com/gagliardetto/solana-go"
 	"github.com/gagliardetto/solana-go/programs/system"
-	confirm "github.com/gagliardetto/solana-go/rpc/sendAndConfirmTransaction"
+	"github.com/gagliardetto/solana-go/rpc"
 	"github.com/gagliardetto/solana-go/rpc/ws"
 	"log"
-
-	"github.com/gagliardetto/solana-go/rpc"
 	"math/big"
 	"sync"
 )
@@ -27,16 +25,12 @@ type Account struct {
 //func (self.)
 
 func (self *Account) TransferNewValueTransferTx(c *rpc.Client, wsClient *ws.Client, to *Account, value *uint64) error {
-	//ctx := context.Background() //context.WithTimeout(context.Background(), 100*time.Second)
 	self.mutex.Lock()
 	defer self.mutex.Unlock()
 
-	//nonce := self.GetNonce(c)
 	recent, err := c.GetRecentBlockhash(context.Background(), rpc.CommitmentFinalized)
 	if err != nil {
-		log.Fatalf("Failed to get blockhash: %v", err)
-	} else {
-		log.Printf("block hash : %v", recent.Value.Blockhash)
+		return err
 	}
 
 	tx, err := solana.NewTransaction(
@@ -65,27 +59,56 @@ func (self *Account) TransferNewValueTransferTx(c *rpc.Client, wsClient *ws.Clie
 	if err != nil {
 		log.Fatalf("Failed to sign tx: %v", err)
 	}
-	//spew.Dump(tx)
-	// Pretty print the transaction:
+
 	//tx.EncodeTree(text.NewTreeEncoder(os.Stdout, "Transfer SOL"))
-
-	// Send transaction, and wait for confirmation:
-	sig, err := confirm.SendAndConfirmTransaction(
+	sig, err := c.SendTransactionWithOpts(
 		context.TODO(),
-		c,
-		wsClient,
 		tx,
+		false,
+		rpc.CommitmentConfirmed,
 	)
-
 	if err != nil {
-		fmt.Printf("Account(%v) : Failed to sendTransaction: %v\n", self.address.String(), err)
-		//if err.Error()
 		return err
 	}
-	log.Printf("signature: %v", sig)
-	//spew.Dump(sig)
 
-	return nil
+	sub, err := wsClient.SignatureSubscribe(
+		sig,
+		rpc.CommitmentConfirmed,
+	)
+	if err != nil {
+		return err
+	}
+	defer sub.Unsubscribe()
+
+	for {
+		got, err := sub.Recv()
+		if err != nil {
+			return err
+		}
+		if got.Value.Err != nil {
+			return fmt.Errorf("transaction confirmation failed: %v", got.Value.Err)
+		} else {
+			return nil
+		}
+	}
+
+	// Send transaction, and wait for confirmation:
+	//sig, err := confirm.SendAndConfirmTransactionWithOpts(
+	//	context.TODO(),
+	//	c,
+	//	wsClient,
+	//	tx,
+	//)
+	//
+	//if err != nil {
+	//	fmt.Printf("Account(%v) : Failed to sendTransaction: %v\n", self.address.String(), err)
+	//	//if err.Error()
+	//	return err
+	//}
+	//log.Printf("signature: %v", sig)
+	////spew.Dump(sig)
+	//
+	//return nil
 }
 
 func (self *Account) GetAddress() solana.PublicKey {

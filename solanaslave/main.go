@@ -126,7 +126,7 @@ func initArgs(tcNames string) {
 	chargeSOLAmount = *chargeSOLAmountPtr
 	chargeValue = new(uint64)
 	// SOL to lamports
-	*chargeValue = solana.LAMPORTS_PER_SOL * chargeSOLAmount // OLAmount)), big.NewInt(1e9)))
+	*chargeValue = solana.LAMPORTS_PER_SOL * chargeSOLAmount
 
 	fmt.Println("Arguments are set like the following:")
 	fmt.Printf("- Target EndPoint = %v\n", gEndpoint)
@@ -169,11 +169,6 @@ func chargeSOLToTestAccounts(accGrp map[solana.PublicKey]*account.Account) {
 	lastFailedNum := 0
 
 	for _, acc := range accGrp {
-		log.Printf("%v\n", acc.GetAddress().String())
-
-	}
-
-	for _, acc := range accGrp {
 		for {
 			err := newCoinbase.TransferNewValueTransferTx(gCli, gCliWs, acc, chargeValue)
 			if err == nil {
@@ -199,7 +194,7 @@ func prepareAccounts() {
 		for {
 			err := coinbase.TransferNewValueTransferTx(gCli, gCliWs, newCoinbase, totalChargeValue)
 			if err != nil {
-				log.Printf("#{os.Getpid()}: charge newCoinbase fail: #{err}\n")
+				log.Printf("%v: charge newCoinbase fail: %v\n", os.Getpid(), err)
 				time.Sleep(1000 * time.Millisecond)
 				continue
 			}
