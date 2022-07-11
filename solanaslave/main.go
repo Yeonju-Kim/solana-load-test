@@ -289,7 +289,7 @@ func main() {
 		}
 	}
 
-	log.Printf("%v", len(filteredTask))
+	//log.Printf("%v", len(filteredTask))
 
 	//Charge Accounts
 	accGrp := make(map[solana.PublicKey]*account.Account)
@@ -298,14 +298,14 @@ func main() {
 
 		for _, acc := range task.AccGrp {
 			_, exist := accGrp[acc.GetAddress()]
-			log.Printf("added to map accGrp %v", acc.GetAddress().String())
+			//log.Printf("added to map accGrp %v", acc.GetAddress().String())
 
 			if !exist {
 				accGrp[acc.GetAddress()] = acc
 			}
 		}
 	}
-	log.Printf("%v\n", newCoinbase.GetAddress().String())
+	//log.Printf("%v\n", newCoinbase.GetAddress().String())
 
 	chargeSOLToTestAccounts(accGrp)
 
