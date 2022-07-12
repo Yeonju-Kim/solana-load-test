@@ -75,10 +75,11 @@ func (self *Account) TransferNewValueTransferTx(c *rpc.Client, wsClient *ws.Clie
 		sig,
 		rpc.CommitmentConfirmed,
 	)
+	defer sub.Unsubscribe()
+
 	if err != nil {
 		return err
 	}
-	defer sub.Unsubscribe()
 
 	for {
 		got, err := sub.Recv()
