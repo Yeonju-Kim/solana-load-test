@@ -163,8 +163,6 @@ func estimateRemainingTime(accGrp map[solana.PublicKey]*account.Account, numChar
 
 func chargeSOLToTestAccounts(accGrp map[solana.PublicKey]*account.Account) {
 	log.Printf("Start charging SOL to test accounts %v", len(accGrp))
-	log.Printf("%v\n", accGrp)
-	log.Printf("%v\n", newCoinbase.GetAddress().String())
 	numChargedAcc := 0
 	lastFailedNum := 0
 
@@ -185,8 +183,6 @@ func chargeSOLToTestAccounts(accGrp map[solana.PublicKey]*account.Account) {
 func prepareAccounts() {
 	totalChargeValue := new(uint64)
 	*totalChargeValue = (*chargeValue) * uint64(nUserForSigned+1)
-	//Import coinbase Account
-	//coinbase = solana.Get
 
 	coinbase = account.GetAccountFromKey(0, coinbasePrivatekey)
 	newCoinbase = account.NewAccount(0) //  solana.NewWallet()
@@ -227,7 +223,6 @@ func prepareAccounts() {
 
 	for i := 0; i < nUserForSigned; i++ {
 		accGrpForSignedTx = append(accGrpForSignedTx, account.NewAccount(i))
-		fmt.Printf("%v \n", accGrpForSignedTx[i].GetAddress().String())
 	}
 }
 
