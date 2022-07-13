@@ -100,8 +100,8 @@ func inTheTCList(tcName string) bool {
 
 func initArgs(tcNames string) {
 	chargeSOLAmount := uint64(100000)
-	gEndpointPtr := flag.String("endpoint", "http://3.38.216.155:8899", "Target EndPoint")
-	gEndpointWsPtr := flag.String("endpointWs", "ws://3.38.216.155:8900", "Target Endpoint for Ws connection")
+	gEndpointPtr := flag.String("endpoint", "http://", "Target EndPoint")
+	gEndpointWsPtr := flag.String("endpointWs", "ws://", "Target Endpoint for Ws connection")
 	activeUserPercentPtr := flag.Int("activepercent", activeUserPercent, "percent of active accounts")
 	keyPtr := flag.String("key", "", "privatekey of coinbase")
 	chargeSOLAmountPtr := flag.Uint64("charge", chargeSOLAmount, "charging amount for each test account in SOL")
